@@ -1,10 +1,14 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Home from "./Home";
+import { storage } from "./Storage";
+import { useMMKVBoolean } from "react-native-mmkv";
 
 const Login = () => {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
-
+    
     const handleLogin = () => {
         if (!phone || !password) {
             Alert.alert("Error", "Please fill in all fields");
@@ -26,7 +30,10 @@ const Login = () => {
                 Alert.alert("Login Unsuccessful", data.errors[0].msg);
                 return;
             }
+            console.log(data);
+            storage.set("IsSignedIn", true);
             Alert.alert("Login success", `Welcome ${data.name}`);
+            
         })
         .catch((error)=>{
             console.log(error)

@@ -1,5 +1,6 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
+import { storage } from "./Storage";
 
 const testData = [
     { id: 1, name: "Massage", price: "100.000" },
@@ -10,21 +11,30 @@ const testData = [
 ];
 
 const Home = () => {
+
+    fetch("https://kami-backend-5rs0.onrender.com/services")
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+        storage.set("services", JSON.stringify(data));
+    })
+    .catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+
     const Item = ({ name, price }) => {
         return (
             <TouchableOpacity
                 style={styles.itemRow}
                 onPress={() => {
-                
                 }}
             >
-
                 <Text style={styles.text}>{name}</Text>
                 <Text style={styles.textPrice}>{price}đ</Text>
             </TouchableOpacity>
-
         );
     }
+
     return (
 
         <View style={styles.container}>
@@ -33,6 +43,7 @@ const Home = () => {
 
             <View style={styles.row}>
                 <Text style={styles.text}>Danh sách dịch vụ</Text>
+
                 <TouchableOpacity
                     style={styles.button}
                 >
@@ -67,7 +78,6 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: "row",
-        flex: 1,
         justifyContent: "space-between",
         marginBottom: 20,
     },
