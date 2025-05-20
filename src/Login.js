@@ -5,10 +5,9 @@ import Home from "./Home";
 import { storage } from "./Storage";
 import { useMMKVBoolean } from "react-native-mmkv";
 
-const Login = () => {
+const Login = ({onSignin}) => {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
-    
     const handleLogin = () => {
         if (!phone || !password) {
             Alert.alert("Error", "Please fill in all fields");
@@ -31,7 +30,10 @@ const Login = () => {
                 return;
             }
             console.log(data);
-            storage.set("IsSignedIn", true);
+            // storage.set("IsSignedIn", true);
+            
+            onSignin();
+            
             Alert.alert("Login success", `Welcome ${data.name}`);
             
         })

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import './gesture-handler';
 import { View } from "react-native";
 import Login from "./src/Login";
 import Home from "./src/Home";
@@ -6,25 +7,53 @@ import AddService from "./src/AddService";
 import { NavigationContainer } from "@react-navigation/native";
 import { storage } from "./src/Storage";
 import { useMMKVBoolean } from "react-native-mmkv";
+import { createStackNavigator } from "@react-navigation/stack";
+import Detail from "./src/Detail";
 
 // 0373007856
 // 123
+const Stack = createStackNavigator();
+const HomeScreen = () => {
+  return (
+    <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#EF506B',
+          },
+          headerTintColor: '#fff',
+        }}
+    >
+        <Stack.Screen name="Home" component={Home} 
+          options={{
+            headerShown: false,}}
+        />
+        <Stack.Screen name="Add Service" component={AddService} options={({route}) => ({title: "Add Service"})} />
+        <Stack.Screen name="Detail" component={Detail} options={({route})=>({title: "Detail Page"})} />
+    </Stack.Navigator>
+  )
+}
+
 const App = () => {
-  var isSignedIn;
-  useEffect(()=>{
-    isSignedIn = storage.getBoolean("isSignedIn");  
-  },[isSignedIn])
-  
-  return(
+  const [isSignedIn, setIsSignedIn] = useMMKVBoolean("isSignedIn");
+
+  // for debug
+  const resetSignIn = false;
+  useEffect(() => {
+      if (resetSignIn){
+        setIsSignedIn(false);
+      }
+  },[])
+
+  return (
 
     <NavigationContainer>
-      {isSignedIn?(
-        <Home/>
-      ):(
-        <Login/>
+      {isSignedIn ? (
+        <HomeScreen />
+      ) : (
+        <Login onSignin={() => setIsSignedIn(true)} />
       )}
     </NavigationContainer>
-      
+
   );
 }
 

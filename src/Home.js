@@ -1,36 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
 import { storage } from "./Storage";
 
-const testData = [
-    { id: 1, name: "Massage", price: "100.000" },
-    { id: 2, name: "Facial", price: "200.000" },
-    { id: 3, name: "Body Scrub", price: "300.000" },
-    { id: 4, name: "Manicure", price: "150.000" },
-    { id: 5, name: "Pedicure", price: "150.000" },
-];
+const Home = ({navigation}) => {
 
-const Home = () => {
+    const [services, setServices] = useState([]);
 
-    fetch("https://kami-backend-5rs0.onrender.com/services")
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data);
-        storage.set("services", JSON.stringify(data));
-    })
-    .catch((error) => {
-        console.error("Error fetching data:", error);
-    });
+    const fetchData = async () => {
+        try {
+            const response = await fetch("https://kami-backend-5rs0.onrender.com/services");
+            const data = await response.json();
+            console.log("Data fetched from API:", data);
+            storage.set("services", JSON.stringify(data));
+            setServices(data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+    
+    useEffect(() => {
+        const storedServices = storage.getString("services");
+        if (storedServices) {
+            console.log("Data fetched from storage:", JSON.parse(storedServices));
+            setServices(JSON.parse(storedServices));
+        } else {
+            fetchData();
+        }
+    }, []);
 
-    const Item = ({ name, price }) => {
+    const Item = ({ service }) => {
         return (
             <TouchableOpacity
                 style={styles.itemRow}
                 onPress={() => {
+                    navigation.navigate("Detail",{
+                        name: service.name,
+                        price: service.price,
+                        creator: service.createdBy,
+                        time: service.createdAt,
+                        update: service.updatedAt,
+                    })
                 }}
             >
-                <Text style={styles.text}>{name}</Text>
-                <Text style={styles.textPrice}>{price}đ</Text>
+                <Text style={styles.text}>{service.name}</Text>
+                <Text style={styles.textPrice}>{service.price}đ</Text>
             </TouchableOpacity>
         );
     }
@@ -46,6 +59,9 @@ const Home = () => {
 
                 <TouchableOpacity
                     style={styles.button}
+                    onPress={() => {
+                        navigation.navigate("Add Service");
+                    }}
                 >
                     <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
@@ -53,9 +69,9 @@ const Home = () => {
 
             </View>
             <FlatList
-                data={testData}
-                renderItem={({ item }) => <Item name={item.name} price={item.price} />}
-                keyExtractor={(item) => item.id.toString()}
+                data={services}
+                renderItem={({ item }) => <Item service={item} />}
+                
             />
 
         </View>

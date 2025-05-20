@@ -1,12 +1,32 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { storage } from "./Storage";
 
-const AddService = () => {
+const AddService = ({route, navigation}) => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     
     const handleAddService = () => {
-        Alert.alert("Add Service", `Service name: ${name}, Price: ${price}`);
+        if (!name || !price) {
+            Alert.alert("Error", "Please fill in all fields");
+            return;
+        }
+
+        var services = storage.getString("services");
+        if (services) {
+            services = JSON.parse(services);
+        } else {
+            services = [];
+        }
+
+        const newService = {
+            name: name,
+            price: price,
+        };
+        services.push(newService);
+        storage.set("services", JSON.stringify(services));
+        Alert.alert("Success", "Service added successfully");
+        navigation.navigate("Home");
     }
     return (
         <View style={styles.container}>
