@@ -40,6 +40,7 @@ const App = () => {
 
   // for debug
   const resetSignIn = false;
+  
   useEffect(() => {
       if (resetSignIn){
         setIsSignedIn(false);

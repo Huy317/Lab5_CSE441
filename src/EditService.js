@@ -5,6 +5,7 @@ const EditService = ({route, navigation}) => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const _id = route.params._id;
+    
     const handleUpdateService = () => {
         if (!name || !price) {
             Alert.alert("Error", "Please fill in all fields");
@@ -19,6 +20,7 @@ const EditService = ({route, navigation}) => {
         }
 
         const newService = {
+            _id: _id,
             name: name,
             price: price,
         };
@@ -50,7 +52,7 @@ const EditService = ({route, navigation}) => {
             <Text>Price*</Text>
             <TextInput
                 style={styles.input}
-                defaultValue={route.params.price}
+                defaultValue={route.params.price+""}
                 onChangeText={(text) => setPrice(text)}
             />
 
