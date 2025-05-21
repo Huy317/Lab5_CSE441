@@ -32,6 +32,7 @@ const Login = ({onSignin}) => {
             console.log(data);
             // storage.set("IsSignedIn", true);
             
+            
             onSignin();
             
             Alert.alert("Login success", `Welcome ${data.name}`);

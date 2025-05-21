@@ -9,6 +9,7 @@ import { storage } from "./src/Storage";
 import { useMMKVBoolean } from "react-native-mmkv";
 import { createStackNavigator } from "@react-navigation/stack";
 import Detail from "./src/Detail";
+import EditService from "./src/EditService";
 
 // 0373007856
 // 123
@@ -29,6 +30,7 @@ const HomeScreen = () => {
         />
         <Stack.Screen name="Add Service" component={AddService} options={({route}) => ({title: "Add Service"})} />
         <Stack.Screen name="Detail" component={Detail} options={({route})=>({title: "Detail Page"})} />
+        <Stack.Screen name="Edit Service" component={EditService} options={({route})=>({title: "Edit Service"})} />
     </Stack.Navigator>
   )
 }

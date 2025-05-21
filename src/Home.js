@@ -34,11 +34,12 @@ const Home = ({navigation}) => {
                 style={styles.itemRow}
                 onPress={() => {
                     navigation.navigate("Detail",{
-                        name: service.name,
-                        price: service.price,
-                        creator: service.createdBy,
-                        time: service.createdAt,
-                        update: service.updatedAt,
+                        // name: service.name,
+                        // price: service.price,
+                        // creator: service.createdBy,
+                        // time: service.createdAt,
+                        // update: service.updatedAt,
+                        service: service,
                     })
                 }}
             >

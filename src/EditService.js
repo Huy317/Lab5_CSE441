@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { storage } from "./Storage";
-import uuid from "react-native-uuid";
-const AddService = ({route, navigation}) => {
+const EditService = ({route, navigation}) => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
-    
-    const handleAddService = () => {
+    const _id = route.params._id;
+    const handleUpdateService = () => {
         if (!name || !price) {
             Alert.alert("Error", "Please fill in all fields");
             return;
@@ -20,18 +19,24 @@ const AddService = ({route, navigation}) => {
         }
 
         const newService = {
-            _id: uuid.v4(),
             name: name,
             price: price,
-            createdBy: "admin",
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
         };
 
-        services.push(newService);
+        const index = services.findIndex((service) => service._id === _id);
+        if (index !== -1) {
+            services[index] = {
+                ...services[index],
+                ...newService,
+                updatedAt: new Date().toISOString(),
+            };
+        } else {
+            Alert.alert("Error", "Service not found");
+            return;
+        }
+
         storage.set("services", JSON.stringify(services));
-        
-        Alert.alert("Success", "Service added successfully");
+        Alert.alert("Success", "Service editted successfully");
         navigation.navigate("Home");
     }
     return (
@@ -39,21 +44,21 @@ const AddService = ({route, navigation}) => {
             <Text>Service name*</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Input a service name"
+                defaultValue={route.params.name}
                 onChangeText={(text) => setName(text)}
             />
             <Text>Price*</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Price"
+                defaultValue={route.params.price}
                 onChangeText={(text) => setPrice(text)}
             />
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={handleAddService}
+                onPress={handleUpdateService}
             >
-                <Text style={styles.buttonText}>Add</Text>
+                <Text style={styles.buttonText}>Update</Text>
             </TouchableOpacity>
         </View>
     )
@@ -91,4 +96,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
     }
 })
-export default AddService;
+export default EditService;
