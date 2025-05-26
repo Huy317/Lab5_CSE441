@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import './gesture-handler';
-import { View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Login from "./src/Login";
 import Home from "./src/Home";
 import AddService from "./src/AddService";
@@ -55,6 +55,29 @@ const CustomerScreen = () => {
     </Stack.Navigator>
   )
 }
+
+const SettingScreen = ({}) => {
+  return (
+    <View>
+      <TouchableOpacity 
+        style={{
+          backgroundColor: "#EF506B",
+          padding: 10,
+          borderRadius: 10,
+        }}
+        onPress={()=>{
+          storage.clearAll();
+          //handle logout
+        }}
+      >
+        <Text style={{ color: "white", fontSize: 20, textAlign: "center", marginTop: 20 }}>
+          Logout
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 
 const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
