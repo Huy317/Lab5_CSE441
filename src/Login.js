@@ -32,6 +32,7 @@ const Login = ({onSignin}) => {
             console.log(data);
             // storage.set("IsSignedIn", true);
             
+            storage.set("user",JSON.stringify(data));
             
             onSignin();
             

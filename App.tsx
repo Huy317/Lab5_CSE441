@@ -10,6 +10,10 @@ import { useMMKVBoolean } from "react-native-mmkv";
 import { createStackNavigator } from "@react-navigation/stack";
 import Detail from "./src/Detail";
 import EditService from "./src/EditService";
+import Customer from "./src/Customer";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "@react-native-vector-icons/material-design-icons";
+import AddCustomer from "./src/AddCustomer";
 
 // 0373007856
 // 123
@@ -17,21 +21,63 @@ const Stack = createStackNavigator();
 const HomeScreen = () => {
   return (
     <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#EF506B',
-          },
-          headerTintColor: '#fff',
-        }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#EF506B',
+        },
+        headerTintColor: '#fff',
+      }}
     >
-        <Stack.Screen name="Home" component={Home} 
-          options={{
-            headerShown: false,}}
-        />
-        <Stack.Screen name="Add Service" component={AddService} options={({route}) => ({title: "Add Service"})} />
-        <Stack.Screen name="Detail" component={Detail} options={({route})=>({title: "Detail Page"})} />
-        <Stack.Screen name="Edit Service" component={EditService} options={({route})=>({title: "Edit Service"})} />
+      <Stack.Screen name="Home" component={Home}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen name="Add Service" component={AddService} options={({ route }) => ({ title: "Add Service" })} />
+      <Stack.Screen name="Detail" component={Detail} options={({ route }) => ({ title: "Detail Page" })} />
+      <Stack.Screen name="Edit Service" component={EditService} options={({ route }) => ({ title: "Edit Service" })} />
     </Stack.Navigator>
+  )
+}
+
+const CustomerScreen = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#EF506B',
+        },
+        headerTintColor: '#fff',
+      }}
+    >
+      <Stack.Screen name="Customer" component={Customer} />
+      <Stack.Screen name="Add Customer" component={AddCustomer} options={({ route }) => ({ title: "Add Customer" })} />
+    </Stack.Navigator>
+  )
+}
+
+const Tab = createBottomTabNavigator();
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName:string = "";
+          if (route.name === "HomeScreen"){
+            iconName = focused ? "home" : "home-outline";
+          }else if (route.name === "CustomerScreen") {
+            iconName = focused ? "account-group" : "account-group-outline";
+          }
+
+          return <Icon name={iconName} size={size} color={color} />
+
+        }
+      })}
+    >
+      <Tab.Screen name="HomeScreen" component={HomeScreen} options={({ route }) => ({ title: "Home" })}/>
+      <Tab.Screen name="CustomerScreen" component={CustomerScreen} options={({ route }) => ({ title: "Customers" })}/>
+    </Tab.Navigator>
   )
 }
 
@@ -39,24 +85,23 @@ const App = () => {
   const [isSignedIn, setIsSignedIn] = useMMKVBoolean("isSignedIn");
 
   // for debug
-  const resetSignIn = false;
-  
+  const resetSignIn = true;
+
   useEffect(() => {
-      if (resetSignIn){
-        setIsSignedIn(false);
-      }
-  },[])
+    if (resetSignIn) {
+      setIsSignedIn(false);
+    }
+  }, [])
 
   return (
 
     <NavigationContainer>
       {isSignedIn ? (
-        <HomeScreen />
+        <TabNavigator />
       ) : (
         <Login onSignin={() => setIsSignedIn(true)} />
       )}
     </NavigationContainer>
-
   );
 }
 
