@@ -14,6 +14,8 @@ import Customer from "./src/Customer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "@react-native-vector-icons/material-design-icons";
 import AddCustomer from "./src/AddCustomer";
+import Transaction from "./src/Transaction";
+import TransactionDetails from "./src/TransactionDetails";
 
 // 0373007856
 // 123
@@ -87,6 +89,21 @@ const SettingScreen = ({}) => {
   )
 }
 
+const TransactionScreen = () => {
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#EF506B',
+        },
+        headerTintColor: '#fff',
+      }}
+    >
+      <Stack.Screen name="Transaction" component={Transaction} />
+      <Stack.Screen name="Transaction Detail" component={TransactionDetails} options={({ route }) => ({ title: "Transaction Details" })} />
+    </Stack.Navigator>
+  )
+}
 
 const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
@@ -109,7 +126,9 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="HomeScreen" component={HomeScreen} options={({ route }) => ({ title: "Home" })}/>
       <Tab.Screen name="CustomerScreen" component={CustomerScreen} options={({ route }) => ({ title: "Customers" })}/>
+      <Tab.Screen name="TransactionScreen" component={TransactionScreen} options={({ route }) => ({ title: "Transactions" })}/>
       <Tab.Screen name="SettingScreen" component={SettingScreen} options={({ route }) => ({ title: "Settings" })}/>
+      
     </Tab.Navigator>
   )
 }
