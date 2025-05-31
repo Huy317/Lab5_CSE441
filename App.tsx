@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import './gesture-handler';
 import { Text, TouchableOpacity, View } from "react-native";
 import Login from "./src/Login";
@@ -17,6 +17,8 @@ import AddCustomer from "./src/AddCustomer";
 
 // 0373007856
 // 123
+const AuthContext = createContext();
+
 const Stack = createStackNavigator();
 const HomeScreen = () => {
   return (
@@ -57,20 +59,27 @@ const CustomerScreen = () => {
 }
 
 const SettingScreen = ({}) => {
+  const {logout} = useContext(AuthContext);
+
   return (
     <View>
       <TouchableOpacity 
         style={{
-          backgroundColor: "#EF506B",
           padding: 10,
           borderRadius: 10,
+          marginTop: 70,
         }}
         onPress={()=>{
-          storage.clearAll();
-          //handle logout
+          storage.delete("user");
+          logout();
         }}
       >
-        <Text style={{ color: "white", fontSize: 20, textAlign: "center", marginTop: 20 }}>
+        <Text style={{
+            color: "white", fontSize: 20, textAlign: "center", marginTop: 20,
+            backgroundColor: "#EF506B",
+            padding: 10,
+            borderRadius: 10,
+           }}>
           Logout
         </Text>
       </TouchableOpacity>
@@ -100,6 +109,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="HomeScreen" component={HomeScreen} options={({ route }) => ({ title: "Home" })}/>
       <Tab.Screen name="CustomerScreen" component={CustomerScreen} options={({ route }) => ({ title: "Customers" })}/>
+      <Tab.Screen name="SettingScreen" component={SettingScreen} options={({ route }) => ({ title: "Settings" })}/>
     </Tab.Navigator>
   )
 }
@@ -108,16 +118,19 @@ const App = () => {
   const [isSignedIn, setIsSignedIn] = useMMKVBoolean("isSignedIn");
 
   // for debug
-  const resetSignIn = true;
+  const resetSignIn = false;
 
   useEffect(() => {
     if (resetSignIn) {
       setIsSignedIn(false);
     }
   }, [])
+  const handleLogout = () => {
+    setIsSignedIn(false);
+  }
 
   return (
-
+    <AuthContext.Provider value={{ logout: handleLogout }}>
     <NavigationContainer>
       {isSignedIn ? (
         <TabNavigator />
@@ -125,6 +138,7 @@ const App = () => {
         <Login onSignin={() => setIsSignedIn(true)} />
       )}
     </NavigationContainer>
+    </AuthContext.Provider>
   );
 }
 
