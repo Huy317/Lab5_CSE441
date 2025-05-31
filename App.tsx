@@ -117,6 +117,10 @@ const TabNavigator = () => {
             iconName = focused ? "home" : "home-outline";
           }else if (route.name === "CustomerScreen") {
             iconName = focused ? "account-group" : "account-group-outline";
+          }else if (route.name === "TransactionScreen") {
+            iconName = focused ? "account-cash" : "account-cash-outline";
+          }else if (route.name === "SettingScreen") {
+            iconName = focused ? "cog" : "cog-outline";
           }
 
           return <Icon name={iconName} size={size} color={color} />
